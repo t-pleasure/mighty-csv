@@ -11,6 +11,7 @@ Benefits of using mighty-csv (as opposed to just OpenCSV):
 Reading CSV Files
 ----------
 
+### Automatic Binding (reads in rows and maps row to class)
 To Automatically bind a row to class, the class must contain a constructor that has the same number of arguments as the number of columns AND accepts only String arguments.
 Reading in csv rows and binding them to a class:
 
@@ -23,8 +24,7 @@ Reading in csv rows and binding them to a class:
     val rows: Iterator[TwoColumnRow] = CSVReader[TwoColumnRow]("two_column.csv")
 
 
-
-To manually map rows to classes:
+### Manually map rows to classes. 
    
     /** 
      * What person.csv might look like
@@ -45,11 +45,41 @@ To manually map rows to classes:
     }
 
 
-
-To Read in csv rows as Array[String]
+### Read in csv rows as Array[String]
 
     import com.bizo.mighty.csv.CSVReader
     
     val rows: Iterator[Array[String]] = CSVReader.readAsRows("filename.csv")
 
 
+### Reading non-standard csv files (e.g., different delimeters, etc.)
+To read in non-standard csv files, simply specify the appropriate OpenCSV CSVReader.
+
+    import au.com.bytecode.opencsv.{ CSVReader => OpenCSVReader }
+    import java.io.{InputStreamReader, FileInputStream}
+    import com.bizo.mighty.csv.CSVReader
+    
+    // note: specify csv settings in OpenCSVReader
+    val reader: OpenCSVReader = new OpenCSVReader(new InputStreamReader(new FileInputStream(fname), "UTF-8"))
+    
+    val rows: Iterator[Array[String]] = CSVReader.readAsRows(reader)
+    /* Note: can also pass reader into CSVReader.apply and CSVReader.read */
+    
+    
+Writing CSV Files
+----------
+### Writing standard csv files:
+
+    import com.bizo.mighty.csv.CSVWriter
+    
+    val output: CSVWriter = CSVWriter("output.csv")
+    
+### Writing non-standard csv files:
+
+    import java.io._
+    import au.com.bytecode.opencsv.{ CSVWriter => OpenCSVWriter }
+    
+    // note: specify csv settings in OpenCSVWriter
+    val writer = new OpenCSVWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fname), "UTF-8")))
+    
+    val output: CSVWriter = CSVWriter(writer)
