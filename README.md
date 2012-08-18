@@ -7,9 +7,35 @@ Benefits of using mighty-csv (as opposed to just OpenCSV):
 ----------
 * Reader implments Iterator. This means that we can call foreach, map, fold, etc...
 * Allows for automatic binding of rows to classes
+* Able to associate rows with header information (e.g., a Dict Reader) 
 
-Reading CSV Files
+Reading CSV Files (With Headers)
 ----------
+### Read in a csv rows as Map[String, String]
+
+    import com.bizo.mighty.csv.CSVDictReader
+    
+    val rows: Iterator[Map[String,String]] = CSVDictReader("filename.csv")
+    
+### Reading non-standard csv files (e.g., different delimeters, etc.)
+To read in non-standard csv files, simply specify the appropriate OpenCSV CSVReader.
+
+    import au.com.bytecode.opencsv.{ CSVReader => OpenCSVReader }
+    import java.io.{InputStreamReader, FileInputStream}
+    import com.bizo.mighty.csv.CSVDictReader
+    
+    // note: specify csv settings in OpenCSVReader
+    val reader: OpenCSVReader = new OpenCSVReader(new InputStreamReader(new FileInputStream(fname), "UTF-8"))
+    
+    val rows: Iterator[Array[String]] = CSVDictReader(reader)
+
+Reading CSV Files (No Headers)
+----------
+### Read in csv rows as Array[String]
+
+    import com.bizo.mighty.csv.CSVReader
+    
+    val rows: Iterator[Array[String]] = CSVReader("filename.csv")
 
 ### Automatic Binding (reads in rows and maps row to class)
 To Automatically bind a row to class, the class must contain a constructor that has the same number of arguments as the number of columns AND accepts only String arguments.
@@ -21,7 +47,7 @@ Reading in csv rows and binding them to a class:
     case class TwoColumnRow(col1: String, col2:String)
     
     // read in file that contains two columns and binds rows to TwoColumnRow
-    val rows: Iterator[TwoColumnRow] = CSVReader[TwoColumnRow]("two_column.csv")
+    val rows: Iterator[TwoColumnRow] = CSVReader.readAs[TwoColumnRow]("two_column.csv")
 
 
 ### Manually map rows to classes. 
@@ -40,16 +66,11 @@ Reading in csv rows and binding them to a class:
     
     case class Person(name: String, age: Int)
     
-    val rows: Iterator[Person] = CSVReader.read("people.csv") { case Array(name, age) =>
+    val rows: Iterator[Person] = CSVReader("people.csv") { case Array(name, age) =>
       Person(name, age.toInt)
     }
 
 
-### Read in csv rows as Array[String]
-
-    import com.bizo.mighty.csv.CSVReader
-    
-    val rows: Iterator[Array[String]] = CSVReader.readAsRows("filename.csv")
 
 
 ### Reading non-standard csv files (e.g., different delimeters, etc.)
@@ -62,8 +83,7 @@ To read in non-standard csv files, simply specify the appropriate OpenCSV CSVRea
     // note: specify csv settings in OpenCSVReader
     val reader: OpenCSVReader = new OpenCSVReader(new InputStreamReader(new FileInputStream(fname), "UTF-8"))
     
-    val rows: Iterator[Array[String]] = CSVReader.readAsRows(reader)
-    /* Note: can also pass reader into CSVReader.apply and CSVReader.read */
+    val rows: Iterator[Array[String]] = CSVReader(reader)
     
     
 Writing CSV Files
