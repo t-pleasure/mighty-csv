@@ -27,7 +27,7 @@ To read in non-standard csv files, simply specify the appropriate OpenCSV CSVRea
     // note: specify csv settings in OpenCSVReader
     val reader: OpenCSVReader = new OpenCSVReader(new InputStreamReader(new FileInputStream(fname), "UTF-8"))
     
-    val rows: Iterator[Array[String]] = CSVDictReader(reader)
+    val rows: Iterator[Map[String,String]] = CSVDictReader(reader)
 
 Reading CSV Files (No Headers)
 ----------
