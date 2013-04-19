@@ -1,11 +1,17 @@
 package com.bizo.mighty.csv
 
 import au.com.bytecode.opencsv.{ CSVReader => OpenCSVReader }
-import java.io.{ FileReader, InputStreamReader, FileInputStream }
+import java.io.{ FileReader, InputStream, InputStreamReader, FileInputStream }
 
+/** Reads rows as Iterator[Map[String, String]]. The keys will be determined by 
+ *  the header row (1st row). The header keys are then mapped to their respective data
+ *  for each row. 
+ *  
+ *  @param reader the instance of OpenCSVReader to wrap
+ */
 class CSVDictReader(reader: OpenCSVReader) extends Iterator[Map[String, String]] {
   private[this] val rows: Iterator[Row] = new CSVRowIterator(reader) flatten
-  private[this] val header: Row = rows.synchronized {
+  val header: Row = rows.synchronized {
     if (!rows.hasNext) sys.error("No rows found") else rows.next()
   }
 
@@ -30,10 +36,34 @@ class CSVDictReader(reader: OpenCSVReader) extends Iterator[Map[String, String]]
 }
 
 object CSVDictReader {
-  def apply(fname: String, encoding: String = "UTF-8"): CSVDictReader = {
-    apply(new OpenCSVReader(new InputStreamReader(new FileInputStream(fname), encoding)))
+  /** Creates a CSVDictReader given a file name
+   *
+   *  @param fname name of file to read from.  
+   */
+  def apply(fname: String)(implicit settings: CSVReaderSettings): CSVDictReader = {
+    apply(new FileInputStream(fname))(settings)
   }
 
+  /** Creates a CSVDictReader given an InputStream
+   *  
+   *  @param is InputStream to read from.
+   */
+  def apply(is: InputStream)(implicit settings: CSVReaderSettings): CSVDictReader = {
+    val oReader = new OpenCSVReader(new InputStreamReader(is, settings.encoding),
+      settings.separator,
+      settings.quotechar,
+      settings.escapechar,
+      settings.linesToSkip,
+      settings.strictQuotes,
+      settings.ignoreLeadingWhiteSpace
+    )
+    apply(oReader)
+  }
+
+  /** Creates a CSVDictReader given an OpenCSVReader
+   *  
+   *  @param reader OpenCSVReader to read from
+   */
   def apply(reader: OpenCSVReader): CSVDictReader = {
     new CSVDictReader(reader)
   }
