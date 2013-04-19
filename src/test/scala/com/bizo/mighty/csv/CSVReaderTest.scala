@@ -25,6 +25,13 @@ class CSVReaderTest extends WordSpec with ShouldMatchers with BeforeAndAfterAll 
       }
     }
 
+    "properly iterate through a csv file, after skipping lines (test 'explicit' defaults)" in {
+      CSVReader("src/etc/test-resources/test.csv")(CSVReaderSettings.Standard.copy(linesToSkip = 3)).zipWithIndex foreach {
+        case (row, index) =>
+          row should be(expectedData(index + 3))
+      }
+    }
+
     "properly bind to specified Types" in {
       //tests case class
       CSVReader.readAs[Foo3S]("src/etc/test-resources/test.csv").toList should be(
@@ -37,7 +44,7 @@ class CSVReaderTest extends WordSpec with ShouldMatchers with BeforeAndAfterAll 
     }
 
     "properly perform row conversion via apply method" in {
-      CSVReader("src/etc/test-resources/test.csv") { case Array(x, y, z) => Foo3S(x, y, z) }.toList should be(
+      CSVReader("src/etc/test-resources/test.csv")(CSVReaderSettings.Standard) { case Array(x, y, z) => Foo3S(x, y, z) }.toList should be(
         expectedData.map { row => Foo3S(row(0), row(1), row(2)) })
     }
 
@@ -55,9 +62,9 @@ class CSVReaderTest extends WordSpec with ShouldMatchers with BeforeAndAfterAll 
 
       val keyfunc = (row: Array[String]) => row(1)
 
-      CSVReader("src/etc/test-resources/test.csv").toList.consecutiveGrouping(keyfunc).zipWithIndex foreach {
-        case ((key, group: Seq[Row]), indx) =>
-          val (eKey, eGroup: Seq[Row]) = expectedGroups(indx)
+      CSVReader("src/etc/test-resources/test.csv").consecutiveGrouping(keyfunc).zipWithIndex foreach {
+        case ((key, group: Seq[_]), indx) =>
+          val (eKey, eGroup: Seq[_]) = expectedGroups(indx)
           // test key validity
           key should be(eKey)
 

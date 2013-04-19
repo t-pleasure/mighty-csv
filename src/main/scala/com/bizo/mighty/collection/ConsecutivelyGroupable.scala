@@ -1,16 +1,15 @@
 package com.bizo.mighty.collection
 import annotation.tailrec
 
-class ConsecutivelyGroupable[T](it: Iterable[T]) {
+class ConsecutivelyGroupable[T](itor: Iterator[T]) {
   def consecutiveGrouping[K](extractKeyFn: T => K): Iterable[(K, Seq[T])] = new Iterable[(K, Seq[T])] {
-    val itor: Iterator[T] = it.iterator
-
+    
     def extractKeyAndRow(row: T): (K, T) = (extractKeyFn(row), row)
 
     def iterator = new Iterator[(K, Seq[T])] {
       // initialize curKey and curRows
-      var (curKey: K, curRows: Seq[T]) = {
-        if (itor.hasNext) {
+      var (curKey, curRows) = {
+        if (itor.hasNext){
           val firstRow = itor.next()
           (extractKeyFn(firstRow), Seq(firstRow))
         } else {
@@ -33,9 +32,9 @@ class ConsecutivelyGroupable[T](it: Iterable[T]) {
           (lst, null.asInstanceOf[K], Seq())
         }
       }
-
+      
       override def next() = {
-        if (curKey == null) { sys.error("current key not defined") }
+        if(curKey == null){sys.error("current key not defined")}
         val key = curKey
         val (collectedRows, nextKey, nextRows) = collect(key, curRows)
         curKey = nextKey
@@ -47,5 +46,5 @@ class ConsecutivelyGroupable[T](it: Iterable[T]) {
 }
 
 object ConsecutivelyGroupable {
-  implicit def toGC[T](it: Iterable[T]) = new ConsecutivelyGroupable[T](it)
+  implicit def iteratorToGC[T](itor: Iterator[T]) = new ConsecutivelyGroupable[T](itor)
 }
