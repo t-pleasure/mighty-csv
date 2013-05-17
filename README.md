@@ -12,7 +12,7 @@ Benefits of using mighty-csv (as opposed to just OpenCSV):
 
 SBT
 ----------
-Tell sbt about a dependency on Mighty-CSV by adding a library dependency to your build.sbt file (or a Scala build file).
+Tell sbt about a dependency on mighty-csv by adding a library dependency to your build.sbt file (or a Scala build file).
 If you are using Scala 2.9, add the following:
 
     libraryDependencies += "com.bizo" % "mighty-csv_2.9.1" % "0.2"
