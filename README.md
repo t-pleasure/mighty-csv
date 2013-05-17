@@ -73,7 +73,7 @@ The CSVWriter.write method can take in either a Seq[String] or Array[String]
 ### Writing csv rows with headers:
     import com.bizo.mighty.csv.CSVDictWriter
     
-    val output: CSVWriter = CSVDictWriter("output.csv", Seq("col1", "col2"))
+    val output: CSVDictWriter = CSVDictWriter("output.csv", Seq("col1", "col2"))
     
     // writes header
     output.writeHeader()
