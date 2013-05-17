@@ -8,6 +8,17 @@ Benefits of using mighty-csv (as opposed to just OpenCSV):
 * Reader implments Iterator. This means that we can call foreach, map, fold, etc...
 * Allows for automatic binding of rows to classes
 * Able to associate rows with header information (e.g., a Dict Reader) 
+* Able to write Maps as rows
+
+SBT
+----------
+Tell sbt about a dependency on Mighty-CSV by adding a library dependency to your build.sbt file (or a Scala build file).
+If you are using Scala 2.9, add the following:
+    libraryDependencies += "com.bizo" % "mighty-csv_2.9.1" % "0.2"
+    
+If you are using Scala 2.10, add the following:    
+    libraryDependencies += "com.bizo" % "mighty-csv_2.10.1" % "0.2"
+
 
 Reading CSV Files (With Headers)
 ----------
