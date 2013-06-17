@@ -19,7 +19,7 @@ If you are using Scala 2.9, add the following:
     
 If you are using Scala 2.10, add the following:    
 
-    libraryDependencies += "com.bizo" % "mighty-csv_2.10.1" % "0.2"
+    libraryDependencies += "com.bizo" % "mighty-csv_2.10" % "0.2"
 
 
 Reading CSV Files
