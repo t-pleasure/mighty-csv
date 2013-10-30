@@ -12,8 +12,8 @@ import com.bizo.mighty.collection.ConsecutivelyGroupable._
 class CSVReader(reader: OpenCSVReader) extends Iterator[Row] {
   private[this] val rows: Iterator[Row] = new CSVRowIterator(reader) flatten
 
-  override def hasNext(): Boolean = rows.synchronized(rows.hasNext)
-  override def next(): Row = rows.synchronized(rows.next())
+  override def hasNext(): Boolean = rows.hasNext
+  override def next(): Row = rows.next()
 
   def apply[T](fn: Row => T): Iterator[T] = {
     this map { fn }

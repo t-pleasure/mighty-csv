@@ -11,15 +11,15 @@ import java.io.{ FileReader, InputStream, InputStreamReader, FileInputStream }
  */
 class CSVDictReader(reader: OpenCSVReader) extends Iterator[Map[String, String]] {
   private[this] val rows: Iterator[Row] = new CSVRowIterator(reader) flatten
-  val header: Row = rows.synchronized {
+  val header: Row = {
     if (!rows.hasNext) sys.error("No rows found") else rows.next()
   }
 
-  override def hasNext(): Boolean = rows.synchronized {
+  override def hasNext(): Boolean = {
     rows.hasNext
   }
 
-  override def next(): Map[String, String] = rows.synchronized {
+  override def next(): Map[String, String] = {
     val currentRow = rows.next()
     if (header.length != currentRow.length) {
       sys.error("Column mismatch: expected %d-cols. encountered %d-cols".format(header.length, currentRow.length))
@@ -29,9 +29,7 @@ class CSVDictReader(reader: OpenCSVReader) extends Iterator[Map[String, String]]
   }
 
   def close() {
-    rows.synchronized {
       reader.close()
-    }
   }
 }
 

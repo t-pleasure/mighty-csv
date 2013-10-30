@@ -11,7 +11,7 @@ import au.com.bytecode.opencsv.{ CSVWriter => OpenCSVWriter }
 class CSVDictWriter(writer: OpenCSVWriter, headers: Seq[String]) {
   
   /** writes the header */
-  def writeHeader() { writer.synchronized { writer.writeNext(headers.toArray) } }
+  def writeHeader() { writer.writeNext(headers.toArray) }
   
   /** writes a row */
   def write(row: Map[String, String]) { 
@@ -19,7 +19,7 @@ class CSVDictWriter(writer: OpenCSVWriter, headers: Seq[String]) {
       row.get(col) getOrElse sys.error("Column (%s) not found in row [%s]".format(col, row.toString))
     } toArray
     
-    writer.synchronized { writer.writeNext(rowData) } 
+    writer.writeNext(rowData)
   }
 
   def close() { writer.close() }

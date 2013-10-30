@@ -9,11 +9,11 @@ import java.io.{ FileReader, InputStreamReader, FileInputStream }
  * allow for safer/easy handling of cases where the the rows are null.
  */
 class CSVRowIterator(reader: OpenCSVReader) extends Iterator[Option[Row]] {
-  var nextLine: Option[Row] = reader.synchronized { Option(reader.readNext()) }
+  var nextLine: Option[Row] = Option(reader.readNext())
 
-  override def hasNext() = reader.synchronized { nextLine.isDefined }
+  override def hasNext() = nextLine.isDefined
 
-  override def next(): Option[Row] = reader.synchronized {
+  override def next(): Option[Row] = {
     val cur: Option[Row] = nextLine
     nextLine = Option(reader.readNext())
     cur

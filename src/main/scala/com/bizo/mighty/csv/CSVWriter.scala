@@ -8,13 +8,13 @@ import au.com.bytecode.opencsv.{ CSVWriter => OpenCSVWriter }
 /** Wrapper for OpenCSVWritter. Allows for writing of Array[String] and Seq[String] */
 class CSVWriter(writer: OpenCSVWriter) {
   /** writes output given Array[String] */
-  def write(row: Array[String]) { writer.synchronized { writer.writeNext(row) } }
+  def write(row: Array[String]) { writer.writeNext(row) }
   /** writes output given Seq[String] */
-  def write(row: Seq[String]) { writer.synchronized { writer.writeNext(row.toArray) } }
+  def write(row: Seq[String]) { writer.writeNext(row.toArray) }
 
   def close() { writer.close() }
 
-  def flush() { writer.synchronized { writer.flush() } }
+  def flush() { writer.flush() }
 
 }
 
