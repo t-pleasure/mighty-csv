@@ -55,9 +55,20 @@ libraryDependencies += "com.bizo" % "mighty-csv_2.10" % "0.2"
 
 
 <h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<a name="easy-read" class="anchor" href="#easy-read"><span class="octicon octicon-link"></span></a>Easily Read CSV Files!</h3>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<p>Users can easily read in csv files (with or without headers):</p>
+<pre><code>
+import com.bizo.mighty.csv._
+
+// reading a csv file (without headers) from filepath
+val rows: Iterator[Array[String]] = CSVReader("filename.csv")
+
+// reading a csv file (WITH headers) from InputStream
+val inStream = {... get input stream ...}
+val dictRows: Iterator[Map[String, String]] = CSVDictReader(inStream)
+</code></pre>
+
 
 <h3>
 <a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
